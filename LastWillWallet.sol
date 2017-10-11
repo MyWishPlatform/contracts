@@ -38,14 +38,17 @@ contract LastWillWallet is LastWill, ERC20Wallet {
     }
 
     function tokenTransfer(address _token, address _to, uint _value) onlyTarget() returns (bool success) {
+        lastOwnerActivity = uint64(block.timestamp);
         return super.tokenTransfer(_token, _to, _value);
     }
 
     function tokenTransferFrom(address _token, address _from, address _to, uint _value) onlyTarget() returns (bool success) {
+        lastOwnerActivity = uint64(block.timestamp);
         return super.tokenTransferFrom(_token, _from, _to, _value);
     }
 
     function tokenApprove(address _token, address _spender, uint256 _value) onlyTarget() returns (bool success) {
+        lastOwnerActivity = uint64(block.timestamp);
         return super.tokenApprove(_token, _spender, _value);
     }
 }
