@@ -17,7 +17,7 @@ contract LastWill is SoftDestruct {
     /**
      * LastWill service admin account.
      */
-    address private lastWillAccount;
+    address private serviceAccount;
     /**
      * Flag means that contract accident already occurs.
      */
@@ -40,7 +40,7 @@ contract LastWill is SoftDestruct {
         }
         assert(summaryPercent == 100);
 
-        lastWillAccount = msg.sender;
+        serviceAccount = msg.sender;
     }
 
     // ------------ EVENTS ----------------
@@ -56,7 +56,7 @@ contract LastWill is SoftDestruct {
     /**
      * Public check method.
      */
-    function check() onlyAdmin() onlyAlive() notTriggered() payable public {
+    function check() onlyAdmin onlyAlive notTriggered payable public {
         if (internalCheck()) {
             Triggered(this.balance);
             triggered = true;
@@ -64,9 +64,18 @@ contract LastWill is SoftDestruct {
         }
     }
 
+    /**
+     * @dev Replace service account with new one.
+     * @param _account Valid service account address.
+     */
+    function changeServiceAccount(address _account) onlyAdmin public {
+        assert(_account != 0);
+        serviceAccount = _account;
+    }
+
     // ------------ FALLBACK -------------
     // Must be less than 2300 gas
-    function() payable onlyAlive() notTriggered() {
+    function() payable onlyAlive() notTriggered {
         FundsAdded(msg.sender, msg.value);
     }
 
@@ -121,12 +130,12 @@ contract LastWill is SoftDestruct {
     }
 
     modifier onlyAdmin() {
-        require(lastWillAccount == msg.sender);
+        require(serviceAccount == msg.sender);
         _;
     }
 
     modifier onlyTargetOrAdmin() {
-        require(isTarget() || lastWillAccount == msg.sender);
+        require(isTarget() || serviceAccount == msg.sender);
         _;
     }
 
