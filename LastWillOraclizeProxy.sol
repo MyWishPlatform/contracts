@@ -1,9 +1,9 @@
 pragma solidity ^0.4.16;
 
-import "lib/oraclizeAPI.sol";
-import "lib/strings.sol";
+import "./lib/oraclizeAPI.sol";
+import "./lib/strings.sol";
 
-import "LastWillOraclizeProxyI.sol";
+import "./LastWillOraclizeProxyI.sol";
 
 contract LastWillOraclizeProxy is usingOraclize, LastWillOraclizeProxyI {
     using strings for *;

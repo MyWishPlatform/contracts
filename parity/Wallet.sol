@@ -10,6 +10,7 @@
 // interior is executed.
 pragma solidity ^0.4.0;
 
+import "./WalletEvents.sol";
 
 contract Wallet is WalletEvents {
 
