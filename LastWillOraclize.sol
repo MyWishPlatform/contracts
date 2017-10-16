@@ -1,7 +1,7 @@
 pragma solidity ^0.4.16;
 
-import "LastWill.sol";
-import "LastWillOraclizeProxyI.sol";
+import "./LastWill.sol";
+import "./LastWillOraclizeProxyI.sol";
 
 contract LastWillOraclize is LastWill {
     LastWillOraclizeProxyI private proxy;

@@ -22,7 +22,7 @@ contract SoftDestruct {
     /**
      * Kill the contract and return funds to the target user.
      */
-    function kill() public onlyTarget() onlyAlive() {
+    function kill() onlyTarget onlyAlive public {
         destroyed = true;
         if (this.balance == 0) {
             return;
@@ -33,7 +33,7 @@ contract SoftDestruct {
     /**
      * Accept ether only of alive.
      */
-    function () payable onlyAlive() {}
+    function () payable onlyAlive {}
 
     function isTarget() internal constant returns (bool) {
         return targetUser == msg.sender;
