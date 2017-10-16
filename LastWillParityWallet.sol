@@ -5,7 +5,7 @@ import "./LastWillWallet.sol";
 
 
 contract LastWillParityWallet is WalletAbi, LastWillWallet {
-    function LastWillParityWallet(address _targetUser, address[] _recipients, uint8[] _percents, uint64 _noActivityPeriod)
+    function LastWillParityWallet(address _targetUser, address[] _recipients, uint[] _percents, uint64 _noActivityPeriod)
             LastWillWallet(_targetUser, _recipients, _percents, _noActivityPeriod) {
     }
 
