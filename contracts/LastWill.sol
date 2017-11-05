@@ -16,6 +16,14 @@ contract LastWill is SoftDestruct, Checkable {
      */
     RecipientPercent[] private percents;
 
+    // ------------ EVENTS ----------------
+    // Occurs when contract was killed.
+    event Killed(bool byUser);
+    // Occurs when founds were sent.
+    event FundsAdded(address indexed from, uint amount);
+    // Occurs when accident leads to sending funds to recipient.
+    event FundsSent(address recipient, uint amount, uint8 percent);
+
     // ------------ CONSTRUCT -------------
     function LastWill(address _targetUser, address[] _recipients, uint[] _percents)
             SoftDestruct(_targetUser) {
@@ -34,13 +42,12 @@ contract LastWill is SoftDestruct, Checkable {
         assert(summaryPercent == 100);
     }
 
-    // ------------ EVENTS ----------------
-    // Occurs when contract was killed.
-    event Killed(bool byUser);
-    // Occurs when founds were sent.
-    event FundsAdded(address indexed from, uint amount);
-    // Occurs when accident leads to sending funds to recipient.
-    event FundsSent(address recipient, uint amount, uint8 percent);
+    /**
+     * Limit check execution only for alive contract.
+     */
+    function check() onlyAlive payable public {
+        super.check();
+    }
 
     // ------------ FALLBACK -------------
     // Must be less than 2300 gas

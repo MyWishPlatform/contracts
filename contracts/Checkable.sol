@@ -1,8 +1,6 @@
 pragma solidity ^0.4.16;
 
-import "./SoftDestruct.sol";
-
-contract Checkable is SoftDestruct {
+contract Checkable {
     address private serviceAccount;
     /**
      * Flag means that contract accident already occurs.
@@ -12,7 +10,7 @@ contract Checkable is SoftDestruct {
     // Occurs when accident happened.
     event Triggered(uint balance);
 
-    function Checkable() {
+    function Checkable() public {
         serviceAccount = msg.sender;
     }
 
@@ -35,7 +33,7 @@ contract Checkable is SoftDestruct {
     /**
      * Public check method.
      */
-    function check() onlyService onlyAlive notTriggered payable public {
+    function check() onlyService notTriggered payable public {
         if (internalCheck()) {
             Triggered(this.balance);
             triggered = true;
@@ -61,11 +59,6 @@ contract Checkable is SoftDestruct {
 
     modifier notTriggered() {
         require(!triggered);
-        _;
-    }
-
-    modifier onlyTargetOrAdmin() {
-        require(isTarget() || serviceAccount == msg.sender);
         _;
     }
 }
