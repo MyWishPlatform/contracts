@@ -28,7 +28,7 @@ contract Pizza is Checkable {
 
     function hotPizza(uint _code, uint _salt) external onlyService {
         require(this.balance != 0);
-        bytes32 pizzaHash = keccak256(_code + _salt);
+        bytes32 pizzaHash = keccak256(_code, _salt);
         require(pizzaHash == hash);
 
         if (block.timestamp <= dueDate) {
