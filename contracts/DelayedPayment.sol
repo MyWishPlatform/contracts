@@ -4,6 +4,9 @@ import "./SoftDestruct.sol";
 import "./Checkable.sol";
 
 contract DelayedPayment is SoftDestruct, Checkable {
+    // Occurs when contract was killed.
+    event Killed(bool byUser);
+
     uint64 public actionTime;
     address public beneficiary;
     uint public amountLimit;
@@ -42,5 +45,13 @@ contract DelayedPayment is SoftDestruct, Checkable {
             FundsSent(targetUser, change);
             targetUser.transfer(change);
         }
+    }
+
+    /**
+     * Extends super method to add event producing.
+     */
+    function kill() public {
+        super.kill();
+        Killed(true);
     }
 }
