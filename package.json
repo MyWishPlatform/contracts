@@ -1,5 +1,5 @@
 {
-  "name": "MyWish Contracts",
+  "name": "MyWishContracts",
   "version": "0.1.0",
   "description": "MyWish Contracts",
   "main": "truffle.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MyWishPlatform/crowdsale.git"
+    "url": "git+https://github.com/MyWishPlatform/contracts.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MyWishPlatform/crowdsale/issues"
+    "url": "https://github.com/MyWishPlatform/contracts/issues"
   },
-  "homepage": "https://github.com/MyWishPlatform/crowdsale#readme",
+  "homepage": "https://github.com/MyWishPlatform/contracts#readme",
   "dependencies": {
     "bignumber.js": "^4.1.0",
     "chai": "^4.1.2",
