@@ -10,7 +10,7 @@ contract LastWillWallet is LastWill, ERC20Wallet {
 
     event Withdraw(address _sender, uint amount, address _beneficiary);
 
-    function LastWillWallet(address _targetUser, address[] _recipients, uint8[] _percents, uint64 _noActivityPeriod)
+    function LastWillWallet(address _targetUser, address[] _recipients, uint[] _percents, uint64 _noActivityPeriod)
         LastWill(_targetUser, _recipients, _percents) {
 
         noActivityPeriod = _noActivityPeriod;

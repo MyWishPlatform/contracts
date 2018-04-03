@@ -1,0 +1,33 @@
+{
+  "name": "MyWishContracts",
+  "version": "0.1.0",
+  "description": "MyWish Contracts",
+  "main": "truffle.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MyWishPlatform/contracts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MyWishPlatform/contracts/issues"
+  },
+  "homepage": "https://github.com/MyWishPlatform/contracts#readme",
+  "dependencies": {
+    "bignumber.js": "^4.1.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "ethereumjs-util": "^5.1.2",
+    "ganache-cli": "^6.0.3",
+    "solc": "^0.4.20",
+    "truffle": "^4.1.0",
+    "zeppelin-solidity": "^1.4.0"
+  }
+}

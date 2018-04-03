@@ -1,11 +1,12 @@
 pragma solidity ^0.4.16;
 
 import "./SoftDestruct.sol";
+import "./Checkable.sol";
 
 /**
- * The base LastWill contract. Check method must be overrided.
+ * The base LastWill contract. Check method must be overridden.
  */
-contract LastWill is SoftDestruct {
+contract LastWill is SoftDestruct, Checkable {
     struct RecipientPercent {
         address recipient;
         uint8 percent;
@@ -14,63 +15,38 @@ contract LastWill is SoftDestruct {
      * Recipient addresses and corresponding % of funds.
      */
     RecipientPercent[] private percents;
-    /**
-     * LastWill service admin account.
-     */
-    address private serviceAccount;
-    /**
-     * Flag means that contract accident already occurs.
-     */
-    bool private triggered = false;
-
-    // ------------ CONSTRUCT -------------
-    function LastWill(address _targetUser, address[] _recipients, uint8[] _percents)
-             SoftDestruct(_targetUser) {
-        assert(_recipients.length == _percents.length);
-        percents.length = _recipients.length;
-        // check percents
-        uint8 summaryPercent = 0;
-        for (uint i = 0; i < _recipients.length; i ++) {
-            address recipient = _recipients[i];
-            uint8 percent = _percents[i];
-
-            assert(recipient != 0x0);
-            summaryPercent += percent;
-            percents[i] = RecipientPercent(recipient, percent);
-        }
-        assert(summaryPercent == 100);
-
-        serviceAccount = msg.sender;
-    }
 
     // ------------ EVENTS ----------------
     // Occurs when contract was killed.
     event Killed(bool byUser);
     // Occurs when founds were sent.
     event FundsAdded(address indexed from, uint amount);
-    // Occurs when accident happened.
-    event Triggered(uint balance);
     // Occurs when accident leads to sending funds to recipient.
     event FundsSent(address recipient, uint amount, uint8 percent);
 
-    /**
-     * Public check method.
-     */
-    function check() onlyAdmin onlyAlive notTriggered payable public {
-        if (internalCheck()) {
-            Triggered(this.balance);
-            triggered = true;
-            distributeFunds();
+    // ------------ CONSTRUCT -------------
+    function LastWill(address _targetUser, address[] _recipients, uint[] _percents)
+            SoftDestruct(_targetUser) {
+        assert(_recipients.length == _percents.length);
+        percents.length = _recipients.length;
+        // check percents
+        uint summaryPercent = 0;
+        for (uint i = 0; i < _recipients.length; i ++) {
+            address recipient = _recipients[i];
+            uint percent = _percents[i];
+
+            assert(recipient != 0x0);
+            summaryPercent += percent;
+            percents[i] = RecipientPercent(recipient, uint8(percent));
         }
+        assert(summaryPercent == 100);
     }
 
     /**
-     * @dev Replace service account with new one.
-     * @param _account Valid service account address.
+     * Limit check execution only for alive contract.
      */
-    function changeServiceAccount(address _account) onlyAdmin public {
-        assert(_account != 0);
-        serviceAccount = _account;
+    function check() onlyAlive payable public {
+        super.check();
     }
 
     // ------------ FALLBACK -------------
@@ -115,11 +91,11 @@ contract LastWill is SoftDestruct {
     }
 
     /**
-     * Do inner check.
-     *
-     * @return bool true of accident triggered, false otherwise.
+     * @dev Do inner action if check was success.
      */
-    function internalCheck() internal returns (bool) {}
+    function internalAction() internal {
+        distributeFunds();
+    }
 
     /**
      * Extends super method to add event producing.
@@ -127,22 +103,5 @@ contract LastWill is SoftDestruct {
     function kill() public {
         super.kill();
         Killed(true);
-    }
-
-    modifier onlyAdmin() {
-        require(serviceAccount == msg.sender);
-        _;
-    }
-
-    modifier onlyTargetOrAdmin() {
-        require(isTarget() || serviceAccount == msg.sender);
-        _;
-    }
-
-    modifier notTriggered() {
-        if(triggered) {
-            revert();
-        }
-        _;
     }
 }

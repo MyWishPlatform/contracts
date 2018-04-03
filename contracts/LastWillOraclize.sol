@@ -36,7 +36,7 @@ contract LastWillOraclize is LastWill {
     event Checked(bool isAccident);
 
     // ------------ CONSTRUCT -------------
-    function LastWillOraclize(address _targetUser, address[] _recipients, uint8[] _percents, uint32 _noActivityPeriod, address _proxy)
+    function LastWillOraclize(address _targetUser, address[] _recipients, uint[] _percents, uint32 _noActivityPeriod, address _proxy)
              LastWill(_targetUser, _recipients, _percents) {
         noActivityPeriod = _noActivityPeriod;
         proxy = LastWillOraclizeProxyI(_proxy);
