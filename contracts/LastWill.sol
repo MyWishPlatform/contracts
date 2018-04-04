@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.21;
 
 import "./SoftDestruct.sol";
 import "./Checkable.sol";
@@ -27,7 +27,7 @@ contract LastWill is SoftDestruct, Checkable {
     // ------------ CONSTRUCT -------------
     function LastWill(address _targetUser, address[] _recipients, uint[] _percents)
             SoftDestruct(_targetUser) {
-        assert(_recipients.length == _percents.length);
+        require(_recipients.length == _percents.length);
         percents.length = _recipients.length;
         // check percents
         uint summaryPercent = 0;
@@ -35,11 +35,11 @@ contract LastWill is SoftDestruct, Checkable {
             address recipient = _recipients[i];
             uint percent = _percents[i];
 
-            assert(recipient != 0x0);
+            require(recipient != 0x0);
             summaryPercent += percent;
             percents[i] = RecipientPercent(recipient, uint8(percent));
         }
-        assert(summaryPercent == 100);
+        require(summaryPercent == 100);
     }
 
     /**
@@ -59,7 +59,7 @@ contract LastWill is SoftDestruct, Checkable {
     /**
      * Calculate amounts to transfer corresponding to the percents.
      */
-    function calculateAmounts(uint balance, uint[] amounts) internal constant
+    function calculateAmounts(uint balance, uint[] amounts) internal view
                     returns (uint change) {
         change = balance;
         for (uint i = 0; i < percents.length; i ++) {
