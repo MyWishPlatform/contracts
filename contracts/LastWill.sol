@@ -22,10 +22,10 @@ contract LastWill is SoftDestruct, Checkable {
     // Occurs when founds were sent.
     event FundsAdded(address indexed from, uint amount);
     // Occurs when accident leads to sending funds to recipient.
-    event FundsSent(address recipient, uint amount, uint8 percent);
+    event FundsSent(address recipient, uint amount, uint percent);
 
     // ------------ CONSTRUCT -------------
-    function LastWill(address _targetUser, address[] _recipients, uint[] _percents)
+    function LastWill(address _targetUser, address[] _recipients, uint[] _percents) public
             SoftDestruct(_targetUser) {
         require(_recipients.length == _percents.length);
         percents.length = _recipients.length;
@@ -63,7 +63,7 @@ contract LastWill is SoftDestruct, Checkable {
                     returns (uint change) {
         change = balance;
         for (uint i = 0; i < percents.length; i ++) {
-            var amount = balance * percents[i].percent / 100;
+            uint amount = balance * percents[i].percent / 100;
             amounts[i] = amount;
             change -= amount;
         }
@@ -77,9 +77,9 @@ contract LastWill is SoftDestruct, Checkable {
         uint change = calculateAmounts(this.balance, amounts);
 
         for (uint i = 0; i < amounts.length; i ++) {
-            var amount = amounts[i];
-            var recipient = percents[i].recipient;
-            var percent = percents[i].percent;
+            uint amount = amounts[i];
+            address recipient = percents[i].recipient;
+            uint percent = percents[i].percent;
 
             if (amount == 0) {
                 continue;

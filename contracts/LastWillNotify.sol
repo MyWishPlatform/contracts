@@ -18,7 +18,7 @@ contract LastWillNotify is LastWill {
     event Notified();
 
     // ------------ CONSTRUCT -------------
-    function LastWillNotify(address _targetUser, address[] _recipients, uint[] _percents, uint32 _noActivityPeriod)
+    function LastWillNotify(address _targetUser, address[] _recipients, uint[] _percents, uint32 _noActivityPeriod) public
              LastWill(_targetUser, _recipients, _percents) {
         noActivityPeriod = _noActivityPeriod;
         lastActiveTs = uint64(block.timestamp);
@@ -27,8 +27,8 @@ contract LastWillNotify is LastWill {
     // ------------ INTERNAL --------------
     function internalCheck() internal returns (bool) {
         require(block.timestamp >= lastActiveTs);
-        // if there was any fund - return back; we do not need payable in this implementation
-        msg.sender.transfer(msg.value);
+        // we do not need payable
+        require(msg.value == 0);
         if (block.timestamp - lastActiveTs >= noActivityPeriod) {
             return true;
         }
@@ -36,8 +36,11 @@ contract LastWillNotify is LastWill {
     }
 
     // ------------ FALLBACK -------------
-    function() payable onlyAlive notTriggered {
+    function() public payable onlyAlive notTriggered {
         FundsAdded(msg.sender, msg.value);
+        if (msg.sender != targetUser) {
+            return;
+        }
         markAvailable();
     }
 
