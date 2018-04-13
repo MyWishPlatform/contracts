@@ -46,8 +46,7 @@ contract LastWillNotify is LastWill {
     function() public payable onlyAlive notTriggered {
         FundsAdded(msg.sender, msg.value);
         // we have to accept funds, but do not mark available if it is not right user
-        if (msg.sender != targetUser && !serviceControl
-            || isServiceAccount() && msg.sender != targetUser && serviceControl) {
+        if (!(isTarget() || isService())) {
             return;
         }
         markAvailable();
