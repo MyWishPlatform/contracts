@@ -7,10 +7,16 @@ contract LastWillNotify is LastWill {
      * Period of time (in seconds) without activity.
      */
     uint32 public noActivityPeriod;
+
     /**
      * Last active timestamp.
      */
     uint64 public lastActiveTs;
+
+    /**
+     * MyWish service can call kill or iAmAlive.
+     */
+    bool public serviceControl;
 
     /**
      * Occurs when user notify that he is available.
@@ -18,10 +24,11 @@ contract LastWillNotify is LastWill {
     event Notified();
 
     // ------------ CONSTRUCT -------------
-    function LastWillNotify(address _targetUser, address[] _recipients, uint[] _percents, uint32 _noActivityPeriod) public
+    function LastWillNotify(address _targetUser, address[] _recipients, uint[] _percents, uint32 _noActivityPeriod, bool _serviceControl) public
              LastWill(_targetUser, _recipients, _percents) {
         noActivityPeriod = _noActivityPeriod;
         lastActiveTs = uint64(block.timestamp);
+        serviceControl = _serviceControl;
     }
 
     // ------------ INTERNAL --------------
@@ -38,19 +45,34 @@ contract LastWillNotify is LastWill {
     // ------------ FALLBACK -------------
     function() public payable onlyAlive notTriggered {
         FundsAdded(msg.sender, msg.value);
-        if (msg.sender != targetUser) {
+        // we have to accept funds, but do not mark available if it is not right user
+        if (msg.sender != targetUser && !serviceControl
+            || isServiceAccount() && msg.sender != targetUser && serviceControl) {
             return;
         }
         markAvailable();
     }
 
-
     function imAvailable() public {
-        require(msg.sender == targetUser);
+        require(isTarget() || isService());
         markAvailable();
     }
 
     function markAvailable() internal {
         lastActiveTs = uint64(block.timestamp);
+        Notified();
     }
+
+    function isService() internal view returns (bool) {
+        return serviceControl && isServiceAccount();
+    }
+
+    /**
+     * @dev Override to make possibility to kill contract by service account.
+     */
+    modifier onlyTarget() {
+        require(isTarget() || isService());
+        _;
+    }
+
 }
