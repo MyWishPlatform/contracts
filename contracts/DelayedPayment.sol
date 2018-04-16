@@ -21,6 +21,7 @@ contract DelayedPayment is SoftDestruct, Checkable {
     }
 
     function internalCheck() internal returns (bool) {
+        Checked();
         // actionTime in the past
         return actionTime <= block.timestamp;
     }

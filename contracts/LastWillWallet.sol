@@ -24,6 +24,7 @@ contract LastWillWallet is LastWill, ERC20Wallet {
     }
 
     function internalCheck() internal returns (bool) {
+        Checked();
         return block.timestamp > lastOwnerActivity && (block.timestamp - lastOwnerActivity) >= noActivityPeriod;
     }
 

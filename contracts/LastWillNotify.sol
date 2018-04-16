@@ -36,6 +36,7 @@ contract LastWillNotify is LastWill {
         require(block.timestamp >= lastActiveTs);
         // we do not need payable
         require(msg.value == 0);
+        Checked();
         if (block.timestamp - lastActiveTs >= noActivityPeriod) {
             return true;
         }
