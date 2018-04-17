@@ -13,7 +13,7 @@ contract Checkable {
     event Triggered(uint balance);
     /**
      * Occurs when check finished.
-     * @params is accident occurred
+     * isAccident is accident occurred
      */
     event Checked(bool isAccident);
 
