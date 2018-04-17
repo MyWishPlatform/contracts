@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.21;
 
 import "./LastWill.sol";
 import "./ERC20Wallet.sol";
@@ -10,21 +10,23 @@ contract LastWillWallet is LastWill, ERC20Wallet {
 
     event Withdraw(address _sender, uint amount, address _beneficiary);
 
-    function LastWillWallet(address _targetUser, address[] _recipients, uint[] _percents, uint64 _noActivityPeriod)
+    function LastWillWallet(address _targetUser, address[] _recipients, uint[] _percents, uint64 _noActivityPeriod) public
         LastWill(_targetUser, _recipients, _percents) {
 
         noActivityPeriod = _noActivityPeriod;
         lastOwnerActivity = uint64(block.timestamp);
     }
 
-    function check() payable public {
+    function check() public payable {
         // we really do not need payable in this implementation
         require(msg.value == 0);
         super.check();
     }
 
     function internalCheck() internal returns (bool) {
-        return block.timestamp > lastOwnerActivity && (block.timestamp - lastOwnerActivity) >= noActivityPeriod;
+        bool result = block.timestamp > lastOwnerActivity && (block.timestamp - lastOwnerActivity) >= noActivityPeriod;
+        Checked(result);
+        return result;
     }
 
     function sendFunds(uint _amount, address _receiver, bytes _data) onlyTarget onlyAlive external {

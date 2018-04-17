@@ -18,16 +18,16 @@
   "bugs": {
     "url": "https://github.com/MyWishPlatform/contracts/issues"
   },
-  "homepage": "https://github.com/MyWishPlatform/contracts#readme",
+  "homepage": "https://github.com/MyWishPlatform/contracts",
   "dependencies": {
-    "bignumber.js": "^4.1.0",
+    "bignumber.js": "^6.0.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "chai-bignumber": "^2.0.2",
-    "ethereumjs-util": "^5.1.2",
-    "ganache-cli": "^6.0.3",
-    "solc": "^0.4.20",
-    "truffle": "^4.1.0",
-    "zeppelin-solidity": "^1.4.0"
+    "ethereumjs-util": "^5.1.5",
+    "ganache-cli": "^6.1.0",
+    "solc": "^0.4.21",
+    "truffle": "^4.1.5",
+    "zeppelin-solidity": "^1.8.0"
   }
 }

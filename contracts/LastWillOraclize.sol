@@ -30,13 +30,9 @@ contract LastWillOraclize is LastWill {
      * To inform LastWill system about latest oraclize price in wei.
      */
     event Price(uint);
-    /**
-     * Occurs when check finished.
-     */
-    event Checked(bool isAccident);
 
     // ------------ CONSTRUCT -------------
-    function LastWillOraclize(address _targetUser, address[] _recipients, uint[] _percents, uint32 _noActivityPeriod, address _proxy)
+    function LastWillOraclize(address _targetUser, address[] _recipients, uint[] _percents, uint32 _noActivityPeriod, address _proxy) public
              LastWill(_targetUser, _recipients, _percents) {
         noActivityPeriod = _noActivityPeriod;
         proxy = LastWillOraclizeProxyI(_proxy);

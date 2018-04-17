@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.21;
 
 /**
  * Base logic for "soft" destruct contract. In other words - to return funds to the target user.
@@ -35,11 +35,11 @@ contract SoftDestruct {
      */
     function () payable onlyAlive {}
 
-    function isTarget() internal constant returns (bool) {
+    function isTarget() internal view returns (bool) {
         return targetUser == msg.sender;
     }
 
-    function isDestroyed() internal constant returns (bool) {
+    function isDestroyed() internal view returns (bool) {
         return destroyed;
     }
 

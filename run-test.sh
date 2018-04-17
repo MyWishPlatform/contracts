@@ -1,3 +1,2 @@
 #!/usr/bin/env bash
-npm install chai
-npm install chai-as-promised
+node node_modules/.bin/truffle test
