@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.21;
 
 import "./SoftDestruct.sol";
 import "./Checkable.sol";
@@ -13,7 +13,7 @@ contract DelayedPayment is SoftDestruct, Checkable {
 
     event FundsSent(address to, uint amount);
 
-    function DelayedPayment(address _targetUser, address _beneficiary, uint _amountLimit, uint _actionTime)
+    function DelayedPayment(address _targetUser, address _beneficiary, uint _amountLimit, uint _actionTime) public
             SoftDestruct(_targetUser) {
         beneficiary = _beneficiary;
         actionTime = uint64(_actionTime);
@@ -21,8 +21,10 @@ contract DelayedPayment is SoftDestruct, Checkable {
     }
 
     function internalCheck() internal returns (bool) {
+        bool result = actionTime <= block.timestamp;
+        Checked(result);
         // actionTime in the past
-        return actionTime <= block.timestamp;
+        return result;
     }
 
     function internalAction() internal {

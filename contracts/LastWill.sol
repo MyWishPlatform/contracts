@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.21;
 
 import "./SoftDestruct.sol";
 import "./Checkable.sol";
@@ -22,12 +22,12 @@ contract LastWill is SoftDestruct, Checkable {
     // Occurs when founds were sent.
     event FundsAdded(address indexed from, uint amount);
     // Occurs when accident leads to sending funds to recipient.
-    event FundsSent(address recipient, uint amount, uint8 percent);
+    event FundsSent(address recipient, uint amount, uint percent);
 
     // ------------ CONSTRUCT -------------
-    function LastWill(address _targetUser, address[] _recipients, uint[] _percents)
+    function LastWill(address _targetUser, address[] _recipients, uint[] _percents) public
             SoftDestruct(_targetUser) {
-        assert(_recipients.length == _percents.length);
+        require(_recipients.length == _percents.length);
         percents.length = _recipients.length;
         // check percents
         uint summaryPercent = 0;
@@ -35,11 +35,11 @@ contract LastWill is SoftDestruct, Checkable {
             address recipient = _recipients[i];
             uint percent = _percents[i];
 
-            assert(recipient != 0x0);
+            require(recipient != 0x0);
             summaryPercent += percent;
             percents[i] = RecipientPercent(recipient, uint8(percent));
         }
-        assert(summaryPercent == 100);
+        require(summaryPercent == 100);
     }
 
     /**
@@ -59,11 +59,11 @@ contract LastWill is SoftDestruct, Checkable {
     /**
      * Calculate amounts to transfer corresponding to the percents.
      */
-    function calculateAmounts(uint balance, uint[] amounts) internal constant
+    function calculateAmounts(uint balance, uint[] amounts) internal view
                     returns (uint change) {
         change = balance;
         for (uint i = 0; i < percents.length; i ++) {
-            var amount = balance * percents[i].percent / 100;
+            uint amount = balance * percents[i].percent / 100;
             amounts[i] = amount;
             change -= amount;
         }
@@ -77,9 +77,9 @@ contract LastWill is SoftDestruct, Checkable {
         uint change = calculateAmounts(this.balance, amounts);
 
         for (uint i = 0; i < amounts.length; i ++) {
-            var amount = amounts[i];
-            var recipient = percents[i].recipient;
-            var percent = percents[i].percent;
+            uint amount = amounts[i];
+            address recipient = percents[i].recipient;
+            uint percent = percents[i].percent;
 
             if (amount == 0) {
                 continue;

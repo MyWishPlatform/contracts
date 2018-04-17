@@ -1,4 +1,4 @@
-pragma solidity ^0.4.16;
+pragma solidity ^0.4.21;
 
 contract Checkable {
     address private serviceAccount;
@@ -7,8 +7,15 @@ contract Checkable {
      */
     bool private triggered = false;
 
-    // Occurs when accident happened.
+    /**
+     * Occurs when accident happened.
+     */
     event Triggered(uint balance);
+    /**
+     * Occurs when check finished.
+     * isAccident is accident occurred
+     */
+    event Checked(bool isAccident);
 
     function Checkable() public {
         serviceAccount = msg.sender;
@@ -18,22 +25,22 @@ contract Checkable {
      * @dev Replace service account with new one.
      * @param _account Valid service account address.
      */
-    function changeServiceAccount(address _account) onlyService public {
-        assert(_account != 0);
+    function changeServiceAccount(address _account) public onlyService {
+        require(_account != 0);
         serviceAccount = _account;
     }
 
     /**
      * @dev Is caller (sender) service account.
      */
-    function isServiceAccount() constant public returns (bool) {
+    function isServiceAccount() view public returns (bool) {
         return msg.sender == serviceAccount;
     }
 
     /**
      * Public check method.
      */
-    function check() onlyService notTriggered payable public {
+    function check() payable public onlyService notTriggered {
         if (internalCheck()) {
             Triggered(this.balance);
             triggered = true;
@@ -57,7 +64,7 @@ contract Checkable {
         _;
     }
 
-    modifier notTriggered() {
+    modifier notTriggered {
         require(!triggered);
         _;
     }
